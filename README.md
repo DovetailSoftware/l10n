@@ -68,14 +68,11 @@ Important: <br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
@@ -85,15 +82,15 @@ Notes:<br/>
 2. edit the file:<br/>
 -- file name example:<br/>
 ```Problem Severity Level_pl-PL.csv```<br/>
--- file format:<br/>
-```list_name,rank,title,locale,localized_value```<br/>
--- exported data example:<br/>
-```Problem Severity Level,3,High,pl-PL,```<br/>
--- add or modify the localized_value:<br/>
+-- file format: <br/>
+```list_name,rank,title,locale,localized_value ```<br/>
+-- exported data example: <br/>
+```Problem Severity Level,3,High,pl-PL,``` <br/>
+-- add or modify the localized_value: <br/>
 ```Problem Severity Level,3,High,pl-PL,Wysokie```
 
 3. run import tool:<br/>
-```CScript //E:JScript [options] ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_pl-PL.csv"
@@ -102,14 +99,11 @@ Notes:<br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
-[/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
@@ -119,11 +113,11 @@ Notes:<br/>
 2. edit the file:<br/>
 -- file name example:<br/>
 ```Notification Types_pl-PL.csv```<br/>
--- file format:<br/>
-```list_name,rank,title,locale,localized_value```<br/>
--- exported data example:<br/>
-```Notification Types,3,Digital Pager,pl-PL,```<br/>
--- add or modify the localized_value<br/>
+-- file format: <br/>
+```list_name,rank,title,locale,localized_value ``` <br/>
+-- exported data example: <br/>
+```Notification Types,3,Digital Pager,pl-PL,``` <br/>
+-- add or modify the localized_value: <br/>
 ```Notification Types,3,Digital Pager,pl-PL,Przywoływacz cyfrowy```<br/>
 Notes:<br/>
 -- for a multi-level list, each element is fully qualified by elements at all preceding levels:<br/>
@@ -133,7 +127,7 @@ Notes:<br/>
 -- only the last value in this path is localized, which is "16m".
 
 3. run import tool:<br/>
-```CScript //E:JScript [options] ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_pl-PL.csv".
