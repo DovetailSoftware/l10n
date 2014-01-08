@@ -68,11 +68,14 @@ Important: <br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
@@ -99,11 +102,14 @@ Notes:<br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX 
+[/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
