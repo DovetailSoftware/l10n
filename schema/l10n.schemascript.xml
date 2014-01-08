@@ -1,0 +1,38 @@
+<schemaScript xmlns="http://www.dovetailsoftware.com/2006/10/SchemaScript.xsd">
+
+  <addTable name="fc_loc_elm" id="4703">
+    <description>Localized element values for custom and user-defined pop up lists</description>
+    <groupName>System</groupName>
+  </addTable>
+
+  <addColumn name="objid" dataType="Integer" table="fc_loc_elm" >
+    <description>Internal record number</description>
+    <clarifyGenericFieldID>3</clarifyGenericFieldID>
+  </addColumn>
+  <addColumn name="title" dataType="String" table="fc_loc_elm" >
+    <length>255</length>
+    <description>Localized Title (name) of the item</description>
+  </addColumn>
+  <addColumn name="locale" dataType="String" table="fc_loc_elm" >
+    <length>20</length>
+    <description>Locale for the localized element</description>
+  </addColumn>
+  <addColumn name="dev" dataType="Integer" table="fc_loc_elm" >
+    <isNullable>true</isNullable>
+    <description>Row version number for mobile distribution purposes</description>
+    <clarifyGenericFieldID>151</clarifyGenericFieldID>
+  </addColumn>
+
+  <addRelation name="hgbst_elm2fc_loc_elm" table="hgbst_elm" inverseRelationName ="fc_loc_elm2hgbst_elm" inverseTable="fc_loc_elm"  type="OneToMany">
+    <description>HGBST Element for this locale string</description>
+  </addRelation>
+
+  <addRelation name="gbst_elm2fc_loc_elm" table="gbst_elm" inverseRelationName ="fc_loc_elm2gbst_elm" inverseTable="fc_loc_elm"  type="OneToMany">
+    <description>GBST Element for this locale string</description>
+  </addRelation>
+
+  <addIndex name="fc_loc_elm_index" columns="locale,fc_loc_elm2hgbst_elm,fc_loc_elm2gbst_elm" table="fc_loc_elm" >
+    <isUnique>true</isUnique>
+  </addIndex>
+
+</schemaScript>
