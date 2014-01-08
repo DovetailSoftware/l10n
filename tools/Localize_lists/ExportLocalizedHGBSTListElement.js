@@ -15,16 +15,18 @@ var hpath = {
 };
 var bulkNum = 0;
 
-function outputAllShowsAndElmsForAList(boHgbstShow,elmObj) {
+function outputAllShowsAndElmsForAList(showObjid,elmObj) {
    var localized = "";
    var outbuff = hpath.list_name;
    for(var i=0; i < hpath.elems.length; i++) outbuff += "," + hpath.elems[i].rank + "," + hpath.elems[i].title;
 
-   var showObjid = boHgbstShow("objid")+0;
+   var boHgbstParShow = FCSession.CreateGeneric("hgbst_show");
+   boHgbstParShow.AppendFilter("objid", "=", showObjid);
+   boHgbstParShow.BulkName = "hgbstelm_" + bulkNum++;
    var boHgbstElm = FCSession.CreateGeneric("hgbst_elm");
-   boHgbstElm.TraverseFromParent(boHgbstShow, "hgbst_show2hgbst_elm");
+   boHgbstElm.TraverseFromParent(boHgbstParShow, "hgbst_show2hgbst_elm");
    boHgbstElm.DataFields = "title,rank";
-   boHgbstElm.BulkName = "hgbstelm_" + bulkNum++;
+   boHgbstElm.BulkName = boHgbstParShow.BulkName;
    boHgbstElm.AppendSort("title","asc");
    if(elmObj > 0) boHgbstElm.AppendFilter("objid", "<>", elmObj);
    var boLocElm = FCSession.CreateGeneric("fc_loc_elm");
@@ -42,6 +44,13 @@ function outputAllShowsAndElmsForAList(boHgbstShow,elmObj) {
       hpath.elems.pop();
       boHgbstElm.MoveNext();
    }
+
+   boLocElm.CloseGeneric();
+   boLocElm = null;
+   boHgbstElm.CloseGeneric();
+   boHgbstElm = null;
+   boHgbstParShow.CloseGeneric();
+   boHgbstParShow = null;
 }
 
 function outputAllShowsAndElmsForAnElm(elmObjid,showObjid) {
@@ -54,7 +63,7 @@ function outputAllShowsAndElmsForAnElm(elmObjid,showObjid) {
    boHgbstChildShow.AppendFilter("objid", "<>", showObjid);
    boHgbstChildShow.Query();
    if(boHgbstChildShow.Count() > 0) {
-      outputAllShowsAndElmsForAList(boHgbstChildShow,elmObjid);
+      outputAllShowsAndElmsForAList(boHgbstChildShow.Id,elmObjid);
    }
    boHgbstChildShow.CloseGeneric();
    boHgbstChildShow = null;
@@ -89,6 +98,7 @@ FCApp.Initialize();
 var FCSession = FCApp.CreateSession();	
 FCSession.LoginFromFCApp();
 FCSession.SetNullStringsToEmpty = true;
+var fso = new ActiveXObject("Scripting.FileSystemObject");
 
 echo("\rExporting " + ((list_name == "") ? "all HGBST lists'" : ("'"+list_name + "' HGBST list's")) + " strings for locale: " + locale);
 
@@ -111,8 +121,7 @@ for(l in lists) {
 
    while(!boHgbstLst.EOF) {
       list_name = boHgbstLst("title") + "";
-      var file_name = file_path + list_name + "_" + locale + constSDefaultExt;
-      fso = new ActiveXObject("Scripting.FileSystemObject");
+      var file_name = file_path + list_name.replace(/[\/\\]/g,"-") + "_HGBST_" + locale + constSDefaultExt;
       outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
       if (outFile == null) {
          echo("unable to create output file: " + file_name);
@@ -120,7 +129,7 @@ for(l in lists) {
       }
       echo("Exporting '" + list_name + "' list to '" + file_name + "'");
       hpath.list_name = list_name;
-      outputAllShowsAndElmsForAList(boHgbstShow,0);
+      outputAllShowsAndElmsForAList(boHgbstShow.Id,0);
       outFile.Close();
       outFile = null;
       boHgbstLst.MoveNext();
@@ -133,8 +142,6 @@ for(l in lists) {
 
 FCSession.Logout();
 
-//CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"Notification Types"
-//CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"CR_DESC"
-//CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"CR_DESC,Notification Types"
 //CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL
+//CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"CR_DESC"
 //CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"Notification Types,Subcase Types,Contact Expertise,Contact Status,Contact Type,Site Status,Site Type,User Status,Phone Types,Email Types,WORKGROUP"

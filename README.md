@@ -54,7 +54,7 @@ Then the files can be imported into the database to create/modify localized elem
 -- use ExportLocalizedHGBSTListElement.js code for used-defined pop-up list(s)<br/>
 -- language code must be specified in xx-XX format. If a language has only the xx symbol e.g. "af" for Afrikaans, use "af-AF".<br/>
 -- a list is exported whole, no individual elements can be selected<br/>
--- each list exports to a separate file named list-name_locale.csv
+-- each list exports to a separate file named list-name_GBST_locale.csv or list-name_HGBST_locale.csv.
 2. modify exported file by adding a localized value at the end of each line of your choice. The value should be in a language indicated by locale code.<br/>
 Important: <br/>
 -- the file is encoded in UCS-2 Little Endian format to allow language-specific characters.<br/>
@@ -77,11 +77,11 @@ Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
--- each list exports into a separate file, e.g. "Problem Severity Level_pl-PL.csv".
+-- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.csv".
 
 2. edit the file:<br/>
 -- file name example:<br/>
-```Problem Severity Level_pl-PL.csv```<br/>
+```Problem Severity Level_GBST_pl-PL.csv```<br/>
 -- file format: <br/>
 ```list_name,rank,title,locale,localized_value ```<br/>
 -- exported data example: <br/>
@@ -93,7 +93,7 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_pl-PL.csv"
+-- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.csv"
 
 ## How to localize a used-defined pop-up List:
 
@@ -108,11 +108,11 @@ Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
--- each list exports into a separate file, e.g. "Notification Types_pl-PL.csv".
+-- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.csv".
 
 2. edit the file:<br/>
 -- file name example:<br/>
-```Notification Types_pl-PL.csv```<br/>
+```Notification Types_HGBST_pl-PL.csv```<br/>
 -- file format: <br/>
 ```list_name,rank,title,locale,localized_value ``` <br/>
 -- exported data example: <br/>
@@ -120,14 +120,14 @@ Notes:<br/>
 -- add or modify the localized_value: <br/>
 ```Notification Types,3,Digital Pager,pl-PL,Przywoływacz cyfrowy```<br/>
 Notes:<br/>
--- for a multi-level list, each element is fully qualified by elements at all preceding levels:<br/>
-```list_name,rank,title[,rank,title]...,locale,localized_value```<br/>
--- for example: CR_DESC list, the "PC" -> "Windows 3.1" -> "16m" element is represented like this:<br/>
-```CR_DESC,1,PC,0,Windows 3.1,1,16m,pl-PL,16 megabajtów```<br/>
+-- for a multi-level list, each element is fully qualified by elements at all preceding levels: <br/>
+```list_name,rank,title[,rank,title]...,locale,localized_value ``` <br/>
+-- for example: CR_DESC list, the "PC" -> "Windows 3.1" -> "16m" element is represented like this: <br/>
+```CR_DESC,1,PC,0,Windows 3.1,1,16m,pl-PL,16 megabajtów ``` <br/>
 -- only the last value in this path is localized, which is "16m".
 
 3. run import tool:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_pl-PL.csv".
+-- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.csv".

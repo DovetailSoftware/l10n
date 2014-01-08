@@ -39,6 +39,7 @@ FCApp.Initialize();
 var FCSession = FCApp.CreateSession();	
 FCSession.LoginFromFCApp();
 FCSession.SetNullStringsToEmpty = true;
+var fso = new ActiveXObject("Scripting.FileSystemObject");
 
 echo("\rExporting " + ((list_name == "") ? "all GBST lists'" : (list_name + " GBST list's")) + " strings for locale: " + locale);
 
@@ -67,8 +68,7 @@ for(l in lists) {
 
    while(!boList.EOF) {
       list_name = boList("title") + "";
-      var file_name = file_path + list_name + "_" + locale + constSDefaultExt;
-      fso = new ActiveXObject("Scripting.FileSystemObject");
+      var file_name = file_path + list_name.replace(/[\/\\]/g,"-") + "_GBST_" + locale + constSDefaultExt;
       outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
       if (outFile == null) {
          echo("unable to create output file: " + file_name);
