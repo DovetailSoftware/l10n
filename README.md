@@ -28,7 +28,7 @@ Then the files can be imported into the database to create/modify localized elem
 - localized values are stored in table_fc_loc_elm rows related to either:<br/>
 -- table_gbst_elm rows for Clarify lists<br/>
 -- table_hgbst_elm rows for used-defined pop-up lists
-- each table_fc_loc_elm row stores the locale code of the value, in xx-XX format (as specified in [here] (http://msdn.microsoft.com/en-us/library/ms533052(vs.85).aspx), e.g. "pl-PL" for Polish).
+- each table_fc_loc_elm row stores the locale code of the value, in xx-XX format (as specified in [here] (http://msdn.microsoft.com/en-us/library/ms533052%28vs.85%29.aspx), e.g. "pl-PL" for Polish).
 - one row in table_gbst_elm or table_hgbst_elm table can have many related table_fc_loc_elm rows, one for each language in use.
 - one row in table_fc_loc_elm can be related to only one row of either table_gbst_elm or table_hgbst_elm. The same row in table_fc_loc_elm can't be used to localize elements in both table_gbst_elm and table_hgbst_elm at the same time even if they store the same title value.
 - it's not required to localize entire list. Individual elements can have as many localizations as needed, one per language, independently from each other.
@@ -36,7 +36,7 @@ Then the files can be imported into the database to create/modify localized elem
 
 ## Notes:
 
-- the tool allows for export-once-import-to-many approach which means the lists may be exported only once form a template database, localized, then imported to as many databases as needed, without having to go through export/text-edit steps for each database separately.
+- the tool allows for export-once-import-to-many approach which means the lists may be exported only once form a template database, localized, then imported to as many databases as needed, without having to go through export-edit steps for each database separately.
 - Clarify list elements are searched for by title. If they are already localized, the localized values will be updated.
 - used-defined pop-up list elements are searched for by title at a level they belong to. If they are already localized, the localized values will be updated.
 - rank values are exported for visual reference only. They will not be modified even if edited.
@@ -68,16 +68,16 @@ Important: <br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:<br/>
-```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
--- each list exports into a separate file, e.g. "Problem Severity Level_pl-PL.csv"
+-- each list exports into a separate file, e.g. "Problem Severity Level_pl-PL.csv".
 
 2. edit the file:<br/>
 -- file name example:<br/>
@@ -99,16 +99,16 @@ Notes:<br/>
 
 1. run export tool:<br/>
 -- export individual list:<br/>
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
 -- export all lists:
-```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
+```CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX <br/>[/path:full_path_to_output_files]```<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
--- each list exports into a separate file, e.g. "Notification Types_pl-PL.csv"
+-- each list exports into a separate file, e.g. "Notification Types_pl-PL.csv".
 
 2. edit the file:<br/>
 -- file name example:<br/>
@@ -124,10 +124,10 @@ Notes:<br/>
 ```list_name,rank,title[,rank,title]...,locale,localized_value```<br/>
 -- for example: CR_DESC list, the "PC" -> "Windows 3.1" -> "16m" element is represented like this:<br/>
 ```CR_DESC,1,PC,0,Windows 3.1,1,16m,pl-PL,16 megabajtów```<br/>
--- only the last value in this path is localized, which is "16m"
+-- only the last value in this path is localized, which is "16m".
 
 3. run import tool:<br/>
 ```CScript //E:JScript [options] ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_pl-PL.csv"
+-- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_pl-PL.csv".
