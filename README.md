@@ -47,6 +47,7 @@ Then the files can be imported into the database to create/modify localized elem
 - install Dovetail Software's fcSDK.
 - prepare connection info in fc.env file.
 - make sure the table_fc_loc_elm is defined in the database schema. If it's not, use Dovetail Software Schema Editor to import \schema\l10n.schemascript.xml file.
+- make the database is Unicode-enabled if any localized values are expected to contain any characters outside of ANSI character set.
 
 ## Usage:
 
@@ -65,7 +66,7 @@ Important: <br/>
 -- use ImportLocalizedGBSTListElement.js code for Clarify list(s)<br/>
 -- use ImportLocalizedHGBSTListElement.js code for used-defined pop-up list(s)
 
-## How to localize a Clarify List:
+## How to localize a Clarify list:
 
 1. run export tool:<br/>
 -- export individual list:<br/>
@@ -99,7 +100,7 @@ Notes:<br/>
 -- run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.csv"
 
-## How to localize a used-defined pop-up List:
+## How to localize a used-defined pop-up list:
 
 1. run export tool:<br/>
 -- export individual list:<br/>
@@ -138,3 +139,13 @@ Notes:<br/>
 Notes:<br/>
 -- run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.csv".
+
+## Usage Tips:
+
+* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.csv" file for Clarify lists and into "cl125_HGBST_pl-PL.csv" file for used-defined pop-up lists. Then use these commands:
+-- for Clarify lists:<br/>
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"cl125_GBST_pl-PL.csv" ```<br/>
+-- for used-defined pop-up lists:<br/>
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"cl125_HGBST_pl-PL.csv" ```<br/>
+Note:<br/>
+-- do not merge Clarify lists and used-defined pop-up lists into one file.
