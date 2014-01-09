@@ -28,86 +28,85 @@ if(file_name == "") {
    show_usage_and_exit("file parameter was not provided and is required");
 }
 
-ifso = new ActiveXObject("Scripting.FileSystemObject");
-inpf = ifso.OpenTextFile(file_name, constIForReading, constBCreate, constIUnicode);
-if(!inpf) {
-   show_usage_and_exit("Input file cannot be open or doesn't exist");
-}
-
 stdout.Write("Connecting to the database...");
 
 var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
 FCApp.Initialize();
 var FCSession = FCApp.CreateSession();	
 FCSession.LoginFromFCApp();
+ifso = new ActiveXObject("Scripting.FileSystemObject");
 
-var boLocElm = FCSession.CreateGeneric('fc_loc_elm');
-boLocElm.BulkName = "new_and_updated_strings";
+echo("\rImporting GBST lists' strings from file(s): " + file_name + "\n");
+var files = file_name.split(",");
 
-//Accepted ,0            ,Accepted      ,pl-PL
-//Accepted ,0            ,Accepted      ,pl-PL             ,Zaakceptowany
-//    0        1               2            3                   4
-//list_name,boElm("rank"),boElm("title"),boLocElm("locale"),boLocElm("title")
-
-echo("\rImporting GBST lists' strings from file: " + file_name);
-
-var list_name = "";
-
-while (! inpf.AtEndOfStream) {
-   var ibuf = inpf.ReadLine();
-   var a = ibuf.split(",");
-   if(a.length < constIExpectedIndexOfLastDataElem) {
-      a = ibuf.split("	");
-      if(a.length < constIExpectedIndexOfLastDataElem) continue;
+for(l in files) {
+   file_name = files[l];
+   inpf = ifso.OpenTextFile(file_name, constIForReading, constBCreate, constIUnicode);
+   if(!inpf) {
+      show_usage_and_exit("Input file: '" + file_name + "' cannot be open or doesn't exist");
    }
-   if(list_name != a[constIIndexOfListName]) {
-      list_name = a[constIIndexOfListName];
-      echo("Importing '" + list_name + "' list");
-   }
-   if(a.length == constIExpectedIndexOfLastDataElem+1 && a[constIIndexOfLocale] != "" && a[constIIndexOfLocalizedValue] != "") {
-      var boList = FCSession.CreateGeneric("gbst_lst");
-      boList.AppendFilter("title","=",list_name);
-      var boElm = FCSession.CreateGeneric("gbst_elm");
-      boElm.TraverseFromParent(boList,"gbst_lst2gbst_elm");
-      boElm.AppendFilter("title","=",a[constIIndexOfTitle]);
-      boList.Query();
+   var list_name = "";
 
-      try { var ElmObjid = boElm.Id } catch(e) { ElmObjid = 0 }
-      if(ElmObjid != 0) {
-         var boCheckLocElm = FCSession.CreateGeneric('fc_loc_elm');
-         boCheckLocElm.BulkName = "existing_strings";
-         boCheckLocElm.AppendFilter("fc_loc_elm2gbst_elm","=",ElmObjid);
-         boCheckLocElm.AppendFilter("locale","=",a[constIIndexOfLocale]);
-         boCheckLocElm.Bulk.Query();
-         if(boCheckLocElm.Count() != 0) {
-            boLocElm.AddForUpdate(boCheckLocElm("objid")+0);
+   while (! inpf.AtEndOfStream) {
+      var ibuf = inpf.ReadLine();
+      var a = ibuf.split(",");
+      if(a.length < constIExpectedIndexOfLastDataElem) {
+         a = ibuf.split("	");
+         if(a.length < constIExpectedIndexOfLastDataElem) continue;
+      }
+      if(list_name != a[constIIndexOfListName]) {
+         list_name = a[constIIndexOfListName];
+         echo("Importing '" + list_name + "' list from file '" + file_name + "'");
+      }
+      if(a.length == constIExpectedIndexOfLastDataElem+1 && a[constIIndexOfLocale] != "" && a[constIIndexOfLocalizedValue] != "") {
+         var boList = FCSession.CreateGeneric("gbst_lst");
+         boList.AppendFilter("title","=",list_name);
+         var boElm = FCSession.CreateGeneric("gbst_elm");
+         boElm.TraverseFromParent(boList,"gbst_lst2gbst_elm");
+         boElm.AppendFilter("title","=",a[constIIndexOfTitle]);
+         boList.Query();
+
+         try { var ElmObjid = boElm.Id } catch(e) { ElmObjid = 0 }
+         if(ElmObjid != 0) {
+            var boLocElm = FCSession.CreateGeneric('fc_loc_elm');
+            boLocElm.BulkName = "new_and_updated_strings";
+            var boCheckLocElm = FCSession.CreateGeneric('fc_loc_elm');
+            boCheckLocElm.BulkName = "existing_strings";
+            boCheckLocElm.AppendFilter("fc_loc_elm2gbst_elm","=",ElmObjid);
+            boCheckLocElm.AppendFilter("locale","=",a[constIIndexOfLocale]);
+            boCheckLocElm.Bulk.Query();
+            if(boCheckLocElm.Count() != 0) {
+               boLocElm.AddForUpdate(boCheckLocElm("objid")+0);
+            } else {
+               boLocElm.AddNew();
+            }
+            boCheckLocElm.CloseGeneric();
+            boCheckLocElm = null;
+
+            boLocElm("title")  = a[constIIndexOfLocalizedValue];
+            boLocElm("locale") = a[constIIndexOfLocale];
+            boLocElm.RelateById(ElmObjid, "fc_loc_elm2gbst_elm");
+            boLocElm.Bulk.UpdateAll();
+            boLocElm.CloseGeneric();
+            boLocElm = null;
          } else {
-            boLocElm.AddNew();
+            echo("\nERROR: missing list element with title: " + a[constIIndexOfTitle] + " for list: " + list_name);
          }
-         boCheckLocElm.CloseGeneric();
-         boCheckLocElm = null;
-
-         boLocElm("title")  = a[constIIndexOfLocalizedValue];
-         boLocElm("locale") = a[constIIndexOfLocale];
-         boLocElm.RelateById(ElmObjid, "fc_loc_elm2gbst_elm");
-      } else {
-         echo("\nERROR: missing list element with title: " + a[constIIndexOfTitle] + " for list: " + list_name);
+         boElm.CloseGeneric();
+         boElm = null;
+         boList.CloseGeneric();
+         boList = null;
       }
    }
-}
 
-inpf.Close();
-
-try {
-   boLocElm.Bulk.UpdateAll();
-} catch(e) {
-   echo("\nERROR:\n" + e.description);
+   inpf.Close();
 }
 
 echo("\nFinished importing GBST lists' localized strings.");
 
-FCSession.CloseAllGenerics();
+inpf = null;
+ifso = null;
 FCSession.Logout();
 
-//CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"Problem Severity Level.txt"
-//CScript //E:JScript ImportLocalizedGBSTListElement.js /file:mobilecl125.txt
+//CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"Problem Severity Level_GBST_pl-PL.csv"
+//CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"Problem Severity Level_GBST_pl-PL.csv,Case Type_GBST_pl-PL.csv,Open_GBST_pl-PL.csv,Closed_GBST_pl-PL.csv,Response Priority Code_GBST_pl-PL.csv"

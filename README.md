@@ -71,7 +71,7 @@ Important: <br/>
 -- export individual list:<br/>
 ```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name-1,list_name-2,...```<br/>
 -- export all lists:<br/>
 ```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
 Notes:<br/>
@@ -91,7 +91,10 @@ Notes:<br/>
 ```Problem Severity Level,3,High,pl-PL,Wysokie```
 
 3. run import tool:<br/>
+-- import individual list:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
+-- import multiple lists:
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.csv"
@@ -102,7 +105,7 @@ Notes:<br/>
 -- export individual list:<br/>
 ```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name```<br/>
 -- export multiple lists:
-```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name_1,list_name_2,...```<br/>
+```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:list_name-1,list_name-2,...```<br/>
 -- export all lists:
 ```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files]```<br/>
 Notes:<br/>
@@ -128,7 +131,10 @@ Notes:<br/>
 -- only the last value in this path is localized, which is "16m".
 
 3. run import tool:<br/>
+-- import individual list:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
+-- import multiple lists:
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
 -- run the tool for each list individually<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.csv".
