@@ -96,7 +96,7 @@ Notes:<br/>
 -- import multiple lists:
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
--- run the tool for each list individually<br/>
+-- run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.csv"
 
 ## How to localize a used-defined pop-up List:
@@ -136,5 +136,5 @@ Notes:<br/>
 -- import multiple lists:
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
--- run the tool for each list individually<br/>
+-- run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.csv".
