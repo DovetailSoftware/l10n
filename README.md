@@ -13,8 +13,9 @@ Then the files can be imported into the database to create/modify localized elem
 
 ## Prerequisites:
 
-- a list element to be localized must exist in the database.
+- the database must be capable of storing Unicode text. Consult [this article] (http://dovetailsoftware.com/clarify/mpawelczyk/2008/08/19/unicode-database-conversion-and-usage/) for guidance on how to make a Clarify/Amdocs database Unicode-enabled.
 - table_fc_loc_elm must be defined in the database schema.
+- a list element to be localized must exist in the database.
 - Dovetail Software's fcSDK must be installed on the computer running the tool.
 
 ## Assumptions:
@@ -28,7 +29,7 @@ Then the files can be imported into the database to create/modify localized elem
 - localized values are stored in table_fc_loc_elm rows related to either:<br/>
 -- table_gbst_elm rows for Clarify lists<br/>
 -- table_hgbst_elm rows for used-defined pop-up lists
-- each table_fc_loc_elm row stores the locale code of the value, in xx-XX format (as specified in [here] (http://msdn.microsoft.com/en-us/library/ms533052%28vs.85%29.aspx), e.g. "pl-PL" for Polish).
+- each table_fc_loc_elm row stores the locale code of the value, in xx-XX format (as specified [here] (http://msdn.microsoft.com/en-us/library/ms533052%28vs.85%29.aspx), e.g. "pl-PL" for Polish).
 - one row in table_gbst_elm or table_hgbst_elm table can have many related table_fc_loc_elm rows, one for each language in use.
 - one row in table_fc_loc_elm can be related to only one row of either table_gbst_elm or table_hgbst_elm. The same row in table_fc_loc_elm can't be used to localize elements in both table_gbst_elm and table_hgbst_elm at the same time even if they store the same title value.
 - it's not required to localize entire list. Individual elements can have as many localizations as needed, one per language, independently from each other.
@@ -57,8 +58,8 @@ Then the files can be imported into the database to create/modify localized elem
 -- each list exports to a separate file named list-name_GBST_locale.csv or list-name_HGBST_locale.csv.
 2. modify exported file by adding a localized value at the end of each line of your choice. The value should be in a language indicated by locale code.<br/>
 Important: <br/>
--- the file is encoded in UCS-2 Little Endian format to allow language-specific characters.<br/>
--- use MS Excel or proper text editor capable of handling UCS-2 encoded files.<br/>
+-- the file is encoded in Unicode format to allow language-specific characters.<br/>
+-- use MS Excel or proper text editor capable of handling Unicode-encoded files.<br/>
 -- do not convert the file to other encoding method to avoid data loss/misrepresentation.
 3. import a list:<br/>
 -- use ImportLocalizedGBSTListElement.js code for Clarify list(s)<br/>
