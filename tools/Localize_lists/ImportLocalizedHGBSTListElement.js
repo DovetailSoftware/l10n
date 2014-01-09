@@ -135,6 +135,8 @@ for(l in files) {
 
          if(!boHgbstLst.EOF && !boHgbstShow.EOF) {
             importAllShowsAndElmsForAList(boHgbstShow,0,1);
+         } else {
+            echo("List: '" + list_name + "' does not exist in this database.");
          }
 
          boHgbstShow.CloseGeneric();

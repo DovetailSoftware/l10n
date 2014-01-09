@@ -65,37 +65,40 @@ for(l in files) {
          boElm.TraverseFromParent(boList,"gbst_lst2gbst_elm");
          boElm.AppendFilter("title","=",a[constIIndexOfTitle]);
          boList.Query();
-
-         try { var ElmObjid = boElm.Id } catch(e) { ElmObjid = 0 }
-         if(ElmObjid != 0) {
-            var boLocElm = FCSession.CreateGeneric('fc_loc_elm');
-            boLocElm.BulkName = "new_and_updated_strings";
-            var boCheckLocElm = FCSession.CreateGeneric('fc_loc_elm');
-            boCheckLocElm.BulkName = "existing_strings";
-            boCheckLocElm.AppendFilter("fc_loc_elm2gbst_elm","=",ElmObjid);
-            boCheckLocElm.AppendFilter("locale","=",a[constIIndexOfLocale]);
-            boCheckLocElm.Bulk.Query();
-            if(boCheckLocElm.Count() != 0) {
-               boLocElm.AddForUpdate(boCheckLocElm("objid")+0);
-            } else {
-               boLocElm.AddNew();
-            }
-            boCheckLocElm.CloseGeneric();
-            boCheckLocElm = null;
-
-            boLocElm("title")  = a[constIIndexOfLocalizedValue];
-            boLocElm("locale") = a[constIIndexOfLocale];
-            boLocElm.RelateById(ElmObjid, "fc_loc_elm2gbst_elm");
-            boLocElm.Bulk.UpdateAll();
-            boLocElm.CloseGeneric();
-            boLocElm = null;
+         if(boList.Count() == 0) {
+            echo("List: '" + list_name + "' does not exist in this database.");
          } else {
-            echo("\nERROR: missing list element with title: " + a[constIIndexOfTitle] + " for list: " + list_name);
+            try { var ElmObjid = boElm.Id } catch(e) { ElmObjid = 0 }
+            if(ElmObjid != 0) {
+               var boLocElm = FCSession.CreateGeneric('fc_loc_elm');
+               boLocElm.BulkName = "new_and_updated_strings";
+               var boCheckLocElm = FCSession.CreateGeneric('fc_loc_elm');
+               boCheckLocElm.BulkName = "existing_strings";
+               boCheckLocElm.AppendFilter("fc_loc_elm2gbst_elm","=",ElmObjid);
+               boCheckLocElm.AppendFilter("locale","=",a[constIIndexOfLocale]);
+               boCheckLocElm.Bulk.Query();
+               if(boCheckLocElm.Count() != 0) {
+                  boLocElm.AddForUpdate(boCheckLocElm("objid")+0);
+               } else {
+                  boLocElm.AddNew();
+               }
+               boCheckLocElm.CloseGeneric();
+               boCheckLocElm = null;
+
+               boLocElm("title")  = a[constIIndexOfLocalizedValue];
+               boLocElm("locale") = a[constIIndexOfLocale];
+               boLocElm.RelateById(ElmObjid, "fc_loc_elm2gbst_elm");
+               boLocElm.Bulk.UpdateAll();
+               boLocElm.CloseGeneric();
+               boLocElm = null;
+            } else {
+               echo("\nERROR: missing list element with title: " + a[constIIndexOfTitle] + " for list: " + list_name);
+            }
+            boElm.CloseGeneric();
+            boElm = null;
+            boList.CloseGeneric();
+            boList = null;
          }
-         boElm.CloseGeneric();
-         boElm = null;
-         boList.CloseGeneric();
-         boList = null;
       }
    }
 
