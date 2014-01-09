@@ -15,12 +15,11 @@ var constIForReading = 1;
 var constBCreate = false;
 var constIUnicode = -1;
 
-var constIExpectedIndexOfLastDataElem = 4;
+var constIExpectedIndexOfLastDataElem = 3;
 var constIIndexOfListName = 0;
-var constIIndexOfRankValue = 1;
-var constIIndexOfTitle = 2;
-var constIIndexOfLocale = 3;
-var constIIndexOfLocalizedValue = 4;
+var constIIndexOfTitle = 1;
+var constIIndexOfLocale = 2;
+var constIIndexOfLocalizedValue = 3;
 
 var file_name = WScript.Arguments.Named.Item("file");
 if(!file_name) file_name = new String();

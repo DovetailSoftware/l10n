@@ -12,22 +12,21 @@ function importAllShowsAndElmsForAList(boHgbstShow,elmObj,arrayIndex) {
    var showObjid = boHgbstShow("objid")+0;
    var elmObjid  = 0;
    var boLocElm  = null;
-   var rank      = a[arrayIndex];
-   var title     = a[arrayIndex + 1];
+   var title     = a[arrayIndex];
    var locale    = "";
    var localized = "";
-   var nextIndex = arrayIndex + 2;
+   var nextIndex = arrayIndex + 1;
    var boHgbstElm = FCSession.CreateGeneric("hgbst_elm");
    boHgbstElm.TraverseFromParent(boHgbstShow, "hgbst_show2hgbst_elm");
-   boHgbstElm.DataFields = "title,rank";
+   boHgbstElm.DataFields = "title";
    boHgbstElm.BulkName = "hgbstelm_" + bulkNum++;
    boHgbstElm.AppendFilter("title","=",title);
    if(elmObj > 0) boHgbstElm.AppendFilter("objid", "<>", elmObj);
 
-   if(arrayIndex == a.length-4) {
-      locale    = a[arrayIndex + 2];
-      localized = a[arrayIndex + 3];
-      nextIndex = arrayIndex + 4;
+   if(arrayIndex == a.length-3) {
+      locale    = a[arrayIndex + 1];
+      localized = a[arrayIndex + 2];
+      nextIndex = arrayIndex + 3;
       boLocElm = FCSession.CreateGeneric("fc_loc_elm");
       boLocElm.DataFields = "title";
       boLocElm.TraverseFromParent(boHgbstElm,"hgbst_elm2fc_loc_elm");
@@ -53,7 +52,7 @@ function importAllShowsAndElmsForAList(boHgbstShow,elmObj,arrayIndex) {
          boLocElm = null;
       }
    } else {
-      echo("\nERROR: missing list element with rank: " + rank + ", title: " + title + " for list: " + list_name);
+      echo("\nERROR: missing list element with title: " + title + " for list: " + list_name);
       return;
    }
 
@@ -83,6 +82,7 @@ function importAllShowsAndElmsForAnElm(elmObjid,showObjid,nextIndex) {
 
 var stdout = WScript.StdOut;
 
+var constIExpectedMinimumRowLength = 4;
 var constIForReading = 1;
 var constBCreate = false;
 var constIUnicode = -1;
@@ -123,7 +123,7 @@ for(l in files) {
          list_name = a[constIIndexOfListName];
          echo("Importing '" + list_name + "' list from file '" + file_name + "'");
       }
-      if((a.length-5) % 2 == 0) {
+      if(a.length >= constIExpectedMinimumRowLength) {
          var boHgbstLst = FCSession.CreateGeneric("hgbst_lst");
          boHgbstLst.BulkName = "hgbstlst_" + bulkNum++;
          boHgbstLst.AppendFilter("title","=",list_name);

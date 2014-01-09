@@ -55,7 +55,7 @@ for(l in lists) {
    boList.AppendSort("title","asc");
 
    var boElm = FCSession.CreateGeneric("gbst_elm");
-   boElm.DataFields = "title,rank";
+   boElm.DataFields = "title";
    boElm.TraverseFromParent(boList,"gbst_lst2gbst_elm");
    boElm.AppendSort("title","asc");
    var boLocElm = FCSession.CreateGeneric("fc_loc_elm");
@@ -77,7 +77,7 @@ for(l in lists) {
       echo("Exporting '" + list_name + "' list to '" + file_name + "'");
       while(!boElm.EOF) {
          try { localized = boLocElm("title") + ""; } catch(e) { localized = ""; }
-         outFile.writeLine(list_name + "," + boElm("rank") + "," + boElm("title") + "," + locale + "," + localized);
+         outFile.writeLine(list_name + "," + boElm("title") + "," + locale + "," + localized);
          boElm.MoveNext();
       }
       outFile.Close();

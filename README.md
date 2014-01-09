@@ -40,7 +40,6 @@ Then the files can be imported into the database to create/modify localized elem
 - the tool allows for export-once-import-to-many approach which means the lists may be exported only once form a template database, localized, then imported to as many databases as needed, without having to go through export-edit steps for each database separately.
 - Clarify list elements are searched for by title. If they are already localized, the localized values will be updated.
 - used-defined pop-up list elements are searched for by title at a level they belong to. If they are already localized, the localized values will be updated.
-- rank values are exported for visual reference only. They will not be modified even if edited.
 
 ## Preparations:
 
@@ -85,11 +84,11 @@ Notes:<br/>
 -- file name example:<br/>
 ```Problem Severity Level_GBST_pl-PL.csv```<br/>
 -- file format: <br/>
-```list_name,rank,title,locale,localized_value ```<br/>
+```list_name,title,locale,localized_value ```<br/>
 -- exported data example: <br/>
-```Problem Severity Level,3,High,pl-PL,``` <br/>
+```Problem Severity Level,High,pl-PL,``` <br/>
 -- add or modify the localized_value: <br/>
-```Problem Severity Level,3,High,pl-PL,Wysokie```
+```Problem Severity Level,High,pl-PL,Wysokie```
 
 3. run import tool:<br/>
 -- import individual list:<br/>
@@ -119,16 +118,16 @@ Notes:<br/>
 -- file name example:<br/>
 ```Notification Types_HGBST_pl-PL.csv```<br/>
 -- file format: <br/>
-```list_name,rank,title,locale,localized_value ``` <br/>
+```list_name,title,locale,localized_value ``` <br/>
 -- exported data example: <br/>
-```Notification Types,3,Digital Pager,pl-PL,``` <br/>
+```Notification Types,Digital Pager,pl-PL,``` <br/>
 -- add or modify the localized_value: <br/>
-```Notification Types,3,Digital Pager,pl-PL,Przywoływacz cyfrowy```<br/>
+```Notification Types,Digital Pager,pl-PL,Przywoływacz cyfrowy```<br/>
 Notes:<br/>
 -- for a multi-level list, each element is fully qualified by elements at all preceding levels: <br/>
-```list_name,rank,title[,rank,title]...,locale,localized_value ``` <br/>
+```list_name,title[,title]...,locale,localized_value ``` <br/>
 -- for example: CR_DESC list, the "PC" -> "Windows 3.1" -> "16m" element is represented like this: <br/>
-```CR_DESC,1,PC,0,Windows 3.1,1,16m,pl-PL,16 megabajtów ``` <br/>
+```CR_DESC,PC,Windows 3.1,16m,pl-PL,16 megabajtów ``` <br/>
 -- only the last value in this path is localized, which is "16m".
 
 3. run import tool:<br/>
@@ -142,7 +141,7 @@ Notes:<br/>
 
 ## Usage Tips:
 
-* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.csv" file for Clarify lists and into "cl125_HGBST_pl-PL.csv" file for used-defined pop-up lists. Then use these commands:
+* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.csv" file for Clarify lists and into "cl125_HGBST_pl-PL.csv" file for used-defined pop-up lists. Then use these commands:<br/>
 -- for Clarify lists:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"cl125_GBST_pl-PL.csv" ```<br/>
 -- for used-defined pop-up lists:<br/>

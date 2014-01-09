@@ -18,14 +18,14 @@ var bulkNum = 0;
 function outputAllShowsAndElmsForAList(showObjid,elmObj) {
    var localized = "";
    var outbuff = hpath.list_name;
-   for(var i=0; i < hpath.elems.length; i++) outbuff += "," + hpath.elems[i].rank + "," + hpath.elems[i].title;
+   for(var i=0; i < hpath.elems.length; i++) outbuff += "," + hpath.elems[i].title;
 
    var boHgbstParShow = FCSession.CreateGeneric("hgbst_show");
    boHgbstParShow.AppendFilter("objid", "=", showObjid);
    boHgbstParShow.BulkName = "hgbstelm_" + bulkNum++;
    var boHgbstElm = FCSession.CreateGeneric("hgbst_elm");
    boHgbstElm.TraverseFromParent(boHgbstParShow, "hgbst_show2hgbst_elm");
-   boHgbstElm.DataFields = "title,rank";
+   boHgbstElm.DataFields = "title";
    boHgbstElm.BulkName = boHgbstParShow.BulkName;
    boHgbstElm.AppendSort("title","asc");
    if(elmObj > 0) boHgbstElm.AppendFilter("objid", "<>", elmObj);
@@ -38,8 +38,8 @@ function outputAllShowsAndElmsForAList(showObjid,elmObj) {
 
    while(!boHgbstElm.EOF) {
       try { localized = boLocElm("title") + ""; } catch(e) { localized = ""; }
-      outFile.WriteLine(outbuff + "," + boHgbstElm("rank") + "," + boHgbstElm("title") + "," + locale + "," + localized);
-      hpath.elems.push({rank:boHgbstElm("rank")+0,title:boHgbstElm("title")+""});
+      outFile.WriteLine(outbuff + "," + boHgbstElm("title") + "," + locale + "," + localized);
+      hpath.elems.push({title:boHgbstElm("title")+""});
       outputAllShowsAndElmsForAnElm(boHgbstElm.Id,showObjid);
       hpath.elems.pop();
       boHgbstElm.MoveNext();
