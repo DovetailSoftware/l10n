@@ -13,7 +13,7 @@ Then the files can be imported into the database to create/modify localized elem
 
 ## Prerequisites:
 
-- the database must be capable of storing Unicode text. Consult [this article] (http://dovetailsoftware.com/clarify/mpawelczyk/2008/08/19/unicode-database-conversion-and-usage/) for guidance on how to make a Clarify/Amdocs database Unicode-enabled.
+- If the localized values contain any characters outside of ANSI character set the database must be capable of storing Unicode text. For example, for German, the ä, ö, ü, and ß characters do not require the database to be Unicode-enabled, whereas the ą, ę, ć, ż, and other Polish characters can only be stored in a Unicode-enabled database. Consult [this article] (http://dovetailsoftware.com/clarify/mpawelczyk/2008/08/19/unicode-database-conversion-and-usage/) for guidance on how to make a Clarify/Amdocs database Unicode-enabled.
 - table_fc_loc_elm must be defined in the database schema.
 - a list element to be localized must exist in the database.
 - Dovetail Software's fcSDK must be installed on the computer running the tool.
