@@ -8,7 +8,7 @@ Dovetail Software Localization Tool For Clarify-defined and User-defined Lists.
 
 This tool allows to export a list or a set of lists from Clarify/Amdocs database into individual files.
 The files contain comma-separated text, one line per list element per local value.
-These files can be modified in a text editor or MS Excel.
+These files can be modified in a text editor.
 Then the files can be imported into the database to create/modify localized elements.
 
 ## Prerequisites:
@@ -55,11 +55,11 @@ Then the files can be imported into the database to create/modify localized elem
 -- use ExportLocalizedHGBSTListElement.js code for used-defined pop-up list(s)<br/>
 -- language code must be specified in xx-XX format. If a language has only the xx symbol e.g. "af" for Afrikaans, use "af-AF".<br/>
 -- a list is exported whole, no individual elements can be selected<br/>
--- each list exports to a separate file named list-name_GBST_locale.csv or list-name_HGBST_locale.csv.
+-- each list exports to a separate file named list-name_GBST_locale.txt or list-name_HGBST_locale.txt.
 2. modify exported file by adding a localized value at the end of each line of your choice. The value should be in a language indicated by locale code.<br/>
 Important: <br/>
 -- the file is encoded in Unicode format to allow language-specific characters.<br/>
--- use MS Excel or proper text editor capable of handling Unicode-encoded files.<br/>
+-- use proper text editor capable of handling Unicode-encoded files.<br/>
 -- do not convert the file to other encoding method to avoid data loss/misrepresentation.
 3. import a list:<br/>
 -- use ImportLocalizedGBSTListElement.js code for Clarify list(s)<br/>
@@ -78,16 +78,16 @@ Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
--- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.csv".
+-- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".
 
 2. edit the file:<br/>
 -- file name example:<br/>
-```Problem Severity Level_GBST_pl-PL.csv```<br/>
+```Problem Severity Level_GBST_pl-PL.txt```<br/>
 -- file format: <br/>
 ```list_name,title,locale,localized_value ```<br/>
 -- exported data example: <br/>
 ```Problem Severity Level,High,pl-PL,``` <br/>
--- add or modify the localized_value: <br/>
+-- add or modify the localized_value at the end of the row: <br/>
 ```Problem Severity Level,High,pl-PL,Wysokie```
 
 3. run import tool:<br/>
@@ -97,7 +97,7 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
 -- run the tool for each list individually or specify multiple file names separated by commas.<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.csv"
+-- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.txt"
 
 ## How to localize a used-defined pop-up list:
 
@@ -112,16 +112,16 @@ Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
 -- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
--- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.csv".
+-- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".
 
 2. edit the file:<br/>
 -- file name example:<br/>
-```Notification Types_HGBST_pl-PL.csv```<br/>
+```Notification Types_HGBST_pl-PL.txt```<br/>
 -- file format: <br/>
 ```list_name,title,locale,localized_value ``` <br/>
 -- exported data example: <br/>
 ```Notification Types,Digital Pager,pl-PL,``` <br/>
--- add or modify the localized_value: <br/>
+-- add or modify the localized_value at the end of the row: <br/>
 ```Notification Types,Digital Pager,pl-PL,Przywoływacz cyfrowy```<br/>
 Notes:<br/>
 -- for a multi-level list, each element is fully qualified by elements at all preceding levels: <br/>
@@ -137,14 +137,14 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
 Notes:<br/>
 -- run the tool for each list individually or specify multiple file names separated by commas.<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.csv".
+-- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.txt".
 
 ## Usage Tips:
 
-* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.csv" file for Clarify lists and into "cl125_HGBST_pl-PL.csv" file for used-defined pop-up lists. Then use these commands:<br/>
+* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.txt" file for Clarify lists and into "cl125_HGBST_pl-PL.txt" file for used-defined pop-up lists. Then use these commands:<br/>
 -- for Clarify lists:<br/>
-```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"cl125_GBST_pl-PL.csv" ```<br/>
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"cl125_GBST_pl-PL.txt" ```<br/>
 -- for used-defined pop-up lists:<br/>
-```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"cl125_HGBST_pl-PL.csv" ```<br/>
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"cl125_HGBST_pl-PL.txt" ```<br/>
 Note:<br/>
 -- do not merge Clarify lists and used-defined pop-up lists into one file.

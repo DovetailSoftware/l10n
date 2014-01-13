@@ -4,15 +4,15 @@ function echo(s){
 
 function show_usage_and_exit(err_msg){
 	echo(err_msg + ", exiting.\n");
-	echo("USAGE 1: CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
-	echo("USAGE 2: CScript //E:JScript [options] ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo("USAGE 1: CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
+	echo("USAGE 2: CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
    WScript.Quit(-1);
 }
 
 var stdout = WScript.StdOut;
 var constBOverwrite = true;
 var constBUnicode = true;
-var constSDefaultExt = ".csv";
+var constSDefaultExt = ".txt";
 
 var locale = WScript.Arguments.Named.Item("locale");
 if(!locale) locale = new String();
@@ -68,7 +68,7 @@ for(l in lists) {
 
    while(!boList.EOF) {
       list_name = boList("title") + "";
-      var file_name = file_path + list_name.replace(/[\/\\]/g,"-") + "_GBST_" + locale + constSDefaultExt;
+      var file_name = file_path + list_name.replace(/[\/\\\?\:\*"\<\>\|\.,']/g,"-") + "_GBST_" + locale + constSDefaultExt;
       outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
       if (outFile == null) {
          echo("unable to create output file: " + file_name);

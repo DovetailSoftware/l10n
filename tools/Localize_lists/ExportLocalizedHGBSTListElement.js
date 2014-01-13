@@ -4,8 +4,8 @@ function echo(s){
 
 function show_usage_and_exit(err_msg){
 	echo(err_msg + ", exiting.\n");
-	echo("USAGE 1: CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
-	echo("USAGE 2: CScript //E:JScript [options] ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo("USAGE 1: CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
+	echo("USAGE 2: CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
    WScript.Quit(-1);
 }
 
@@ -74,7 +74,7 @@ function outputAllShowsAndElmsForAnElm(elmObjid,showObjid) {
 var stdout = WScript.StdOut;
 var constBOverwrite = true;
 var constBUnicode = true;
-var constSDefaultExt = ".csv";
+var constSDefaultExt = ".txt";
 
 var locale = WScript.Arguments.Named.Item("locale");
 if(!locale) locale = new String();
@@ -110,7 +110,7 @@ for(l in lists) {
    boHgbstLst.BulkName = "hgbstlst_" + bulkNum++;
    boHgbstLst.DataFields = "title";
    if(lists[l] != "*") {
-      boHgbstLst.AppendFilter("title","=",lists[l]);
+      boHgbstLst.AppendFilter("title","=",lists[l].replace(/^[']/,"").replace(/[']$/,""));
    }
    boHgbstLst.AppendSort("title","asc");
 
@@ -119,20 +119,24 @@ for(l in lists) {
    boHgbstShow.BulkName = boHgbstLst.BulkName;
    boHgbstLst.Bulk.Query();
 
-   while(!boHgbstLst.EOF) {
-      list_name = boHgbstLst("title") + "";
-      var file_name = file_path + list_name.replace(/[\/\\]/g,"-") + "_HGBST_" + locale + constSDefaultExt;
-      outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
-      if (outFile == null) {
-         echo("unable to create output file: " + file_name);
-         WScript.Quit(-1);
+   if(boHgbstLst.EOF || boHgbstShow.EOF) {
+      echo("List: '" + lists[l].replace(/^[']/,"").replace(/[']$/,"") + "' does not exist in this database.");
+   } else {
+      while(!boHgbstLst.EOF) {
+         list_name = boHgbstLst("title") + "";
+         var file_name = file_path + list_name.replace(/[\/\\\?\:\*"\<\>\|\.,']/g,"-") + "_HGBST_" + locale + constSDefaultExt;
+         outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
+         if (outFile == null) {
+            echo("unable to create output file: " + file_name);
+            WScript.Quit(-1);
+         }
+         echo("Exporting '" + list_name + "' list to '" + file_name + "'");
+         hpath.list_name = list_name;
+         outputAllShowsAndElmsForAList(boHgbstShow.Id,0);
+         outFile.Close();
+         outFile = null;
+         boHgbstLst.MoveNext();
       }
-      echo("Exporting '" + list_name + "' list to '" + file_name + "'");
-      hpath.list_name = list_name;
-      outputAllShowsAndElmsForAList(boHgbstShow.Id,0);
-      outFile.Close();
-      outFile = null;
-      boHgbstLst.MoveNext();
    }
 
    FCSession.CloseAllGenerics();
