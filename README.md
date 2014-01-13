@@ -77,7 +77,7 @@ Important: <br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks or any of "/%5C%3F%3A*%22%3C%3E%7C.%2C%27", enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
+-- if a list name contains blanks or any of "/\?:*"<>|.,'", enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
 -- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".
 
 2. edit the file:<br/>
@@ -101,7 +101,7 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
 -- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
--- use /folder parameter to run the tool for all list file names matching *_GBST_*.txt.<br/>
+-- use /folder parameter to run the tool for all list file names matching ```*_GBST_*.txt```<br/>
 -- the /folder parameter takes precedence over the /file parameter.<br/>
 -- if a file or folder name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.txt"
 
@@ -117,7 +117,7 @@ Notes:<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks or any of "/%5C%3F%3A*%22%3C%3E%7C.%2C%27", enclose in double-quotes, e.g. /list:"Notification Types"<br/>
+-- if a list name contains blanks or any of "/\?:*"<>|.,'", enclose in double-quotes, e.g. /list:"Notification Types"<br/>
 -- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".
 
 2. edit the file:<br/>
@@ -147,7 +147,7 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
 -- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
--- use /folder parameter to run the tool for all list file names matching *_HGBST_*.txt.<br/>
+-- use /folder parameter to run the tool for all list file names matching ```*_HGBST_*.txt```<br/>
 -- the /folder parameter takes precedence over the /file parameter.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.txt".
 
