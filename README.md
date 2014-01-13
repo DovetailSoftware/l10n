@@ -93,16 +93,16 @@ Notes:<br/>
 3. run import tool:<br/>
 -- import individual list:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
--- import multiple lists:
+-- import multiple lists:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
--- import all lists from current folder:
+-- import all lists from current folder:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /folder:.```<br/>
--- import all lists from specific folder:
+-- import all lists from specific folder:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
 -- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- use /folder parameter to run the tool for all list file names matching *_GBST_*.txt.<br/>
--- the /folder parameter takes precedence over the /file parameter.
+-- the /folder parameter takes precedence over the /file parameter.<br/>
 -- if a file or folder name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.txt"
 
 ## How to localize a used-defined pop-up list:
@@ -139,16 +139,16 @@ Notes:<br/>
 3. run import tool:<br/>
 -- import individual list:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
--- import multiple lists:
+-- import multiple lists:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
--- import all lists from current folder:
+-- import all lists from current folder:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:.```<br/>
--- import all lists from specific folder:
+-- import all lists from specific folder:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
 -- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
 -- use /folder parameter to run the tool for all list file names matching *_HGBST_*.txt.<br/>
--- the /folder parameter takes precedence over the /file parameter.
+-- the /folder parameter takes precedence over the /file parameter.<br/>
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.txt".
 
 ## Usage Tips:
