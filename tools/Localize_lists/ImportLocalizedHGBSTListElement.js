@@ -4,7 +4,12 @@ function echo(s) {
 
 function show_usage_and_exit(err_msg) {
 	echo(err_msg + ", exiting.\n");
-	echo("USAGE: CScript //E:JScript [options] ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file");
+	echo("USAGE 1: CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file[,full_path_to_input_file]...");
+	echo("USAGE 2: CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:full_path_to_a_folder_with_input_file(s)");
+	echo("USAGE 3: CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:.");
+   echo("NOTES  : the input file(s) must have been recently created by ExportLocalizedHGBSTListElement.js!");
+   echo("         the /folder parameter takes precedence over the /file parameter.");
+   echo("         use /folder:. to import all *_HGBST_*.txt files in current folder.");
    WScript.Quit(-1);
 }
 
@@ -88,11 +93,15 @@ var constBCreate = false;
 var constIUnicode = -1;
 var constIIndexOfListName = 0;
 var bulkNum = 0;
+var files = [];
+
+var folder_name = WScript.Arguments.Named.Item("folder");
+if(!folder_name) folder_name = new String();
 
 var file_name = WScript.Arguments.Named.Item("file");
 if(!file_name) file_name = new String();
-if(file_name == "") {
-   show_usage_and_exit("file parameter was not provided and is required");
+if(file_name == "" && folder_name == "") {
+   show_usage_and_exit("neither 'file' nor 'folder' parameter was provided but one is required");
 }
 
 stdout.Write("Connecting to the database...");
@@ -101,52 +110,72 @@ var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
 FCApp.Initialize();
 var FCSession = FCApp.CreateSession();	
 FCSession.LoginFromFCApp();
-ifso = new ActiveXObject("Scripting.FileSystemObject");
+var ifso = new ActiveXObject("Scripting.FileSystemObject");
 
-echo("\rImporting HGBST lists' strings from file(s): " + file_name + "\n");
-var files = file_name.split(",");
+if(folder_name != "") {
+   try {
+      echo("\rImporting HGBST lists' strings from folder: " + folder_name + "\n");
+      var folder = ifso.GetFolder(folder_name);
+      var fc = new Enumerator(folder.files);
+      for(; !fc.atEnd(); fc.moveNext()) {
+         file_name = fc.item().name;
+         if(file_name.indexOf("_HGBST_") > 0) files.push(file_name);
+      }
+      folder = null;
+      fc = null;
+   } catch(e) {
+      show_usage_and_exit("ERROR: " + e.description + " while processing " + folder_name + " folder");
+   }
+} else {
+   echo("\rImporting HGBST lists' strings from file(s): " + file_name + "\n");
+   files = file_name.split(",");
+}
 
 for(l in files) {
    file_name = files[l];
-   inpf = ifso.OpenTextFile(file_name, constIForReading, constBCreate, constIUnicode);
-   if(!inpf) {
-      show_usage_and_exit("Input file: '" + file_name + "' cannot be open or doesn't exist");
-   }
-
-   var list_name = "";
-   var a = [];
-
-   while (! inpf.AtEndOfStream) {
-      var ibuf = inpf.ReadLine();
-      a = ibuf.replace(/\t/g,",").split(",");
-      if(list_name != a[constIIndexOfListName]) {
-         list_name = a[constIIndexOfListName];
-         echo("Importing '" + list_name + "' list from file '" + file_name + "'");
+   try {
+      inpf = ifso.OpenTextFile(file_name, constIForReading, constBCreate, constIUnicode);
+      if(!inpf) {
+         show_usage_and_exit("Input file: '" + file_name + "' cannot be open or doesn't exist");
       }
-      if(a.length >= constIExpectedMinimumRowLength) {
-         var boHgbstLst = FCSession.CreateGeneric("hgbst_lst");
-         boHgbstLst.BulkName = "hgbstlst_" + bulkNum++;
-         boHgbstLst.AppendFilter("title","=",list_name);
 
-         var boHgbstShow = FCSession.CreateGeneric("hgbst_show");
-         boHgbstShow.TraverseFromParent(boHgbstLst, "hgbst_lst2hgbst_show");
-         boHgbstShow.BulkName = boHgbstLst.BulkName;
-         boHgbstLst.Bulk.Query();
+      var list_name = "";
+      var a = [];
 
-         if(!boHgbstLst.EOF && !boHgbstShow.EOF) {
-            importAllShowsAndElmsForAList(boHgbstShow,0,1);
-         } else {
-            echo("List: '" + list_name + "' does not exist in this database.");
+      while (! inpf.AtEndOfStream) {
+         var ibuf = inpf.ReadLine();
+         a = ibuf.replace(/\t/g,",").split(",");
+         if(list_name != a[constIIndexOfListName]) {
+            list_name = a[constIIndexOfListName];
+            echo("Importing '" + list_name + "' list from file '" + file_name + "'");
          }
+         if(a.length >= constIExpectedMinimumRowLength) {
+            var boHgbstLst = FCSession.CreateGeneric("hgbst_lst");
+            boHgbstLst.BulkName = "hgbstlst_" + bulkNum++;
+            boHgbstLst.AppendFilter("title","=",list_name);
 
-         boHgbstShow.CloseGeneric();
-         boHgbstShow = null;
-         boHgbstLst.CloseGeneric();
-         boHgbstLst = null;
+            var boHgbstShow = FCSession.CreateGeneric("hgbst_show");
+            boHgbstShow.TraverseFromParent(boHgbstLst, "hgbst_lst2hgbst_show");
+            boHgbstShow.BulkName = boHgbstLst.BulkName;
+            boHgbstLst.Bulk.Query();
+
+            if(!boHgbstLst.EOF && !boHgbstShow.EOF) {
+               importAllShowsAndElmsForAList(boHgbstShow,0,1);
+            } else {
+               echo("List: '" + list_name + "' does not exist in this database.");
+            }
+
+            boHgbstShow.CloseGeneric();
+            boHgbstShow = null;
+            boHgbstLst.CloseGeneric();
+            boHgbstLst = null;
+         }
       }
-   }
 
-   inpf.Close();
+      inpf.Close();
+   } catch(e) {
+      echo("ERROR: " + e.description + " while processing " + file_name + " file. Skipping...");
+   }
 }
 
 echo("\nFinished importing HGBST lists' localized strings.");
@@ -156,5 +185,5 @@ ifso = null;
 FCSession.CloseAllGenerics();
 FCSession.Logout();
 
-//CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"Notification Types_HGBST_pl-PL.csv"
-//CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"Contact Expertise_HGBST_pl-PL.csv,Contact Status_HGBST_pl-PL.csv,Email Types_HGBST_pl-PL.csv,Notification Types_HGBST_pl-PL.csv,Phone Types_HGBST_pl-PL.csv,Site Status_HGBST_pl-PL.csv,Site Type_HGBST_pl-PL.csv,Subcase Types_HGBST_pl-PL.csv,User Status_HGBST_pl-PL.csv,WORKGROUP_HGBST_pl-PL.csv"
+//CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"Notification Types_HGBST_pl-PL.txt"
+//CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"Contact Expertise_HGBST_pl-PL.txt,Contact Status_HGBST_pl-PL.txt,Email Types_HGBST_pl-PL.txt,Notification Types_HGBST_pl-PL.txt,Phone Types_HGBST_pl-PL.txt,Site Status_HGBST_pl-PL.txt,Site Type_HGBST_pl-PL.txt,Subcase Types_HGBST_pl-PL.txt,User Status_HGBST_pl-PL.txt,WORKGROUP_HGBST_pl-PL.txt"

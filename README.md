@@ -46,7 +46,7 @@ Then the files can be imported into the database to create/modify localized elem
 - install Dovetail Software's fcSDK.
 - prepare connection info in fc.env file.
 - make sure the table_fc_loc_elm is defined in the database schema. If it's not, use Dovetail Software Schema Editor to import \schema\l10n.schemascript.xml file.
-- make the database is Unicode-enabled if any localized values are expected to contain any characters outside of ANSI character set.
+- make the database Unicode-enabled if any localized values are expected to contain any characters outside of ANSI character set.
 
 ## Usage:
 
@@ -77,7 +77,7 @@ Important: <br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
+-- if a list name contains blanks or any of "/%5C%3F%3A*%22%3C%3E%7C.%2C%27", enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
 -- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".
 
 2. edit the file:<br/>
@@ -95,9 +95,15 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file```<br/>
 -- import multiple lists:
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
+-- import all lists from current folder:
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /folder:.```<br/>
+-- import all lists from specific folder:
+```CScript //E:JScript ImportLocalizedGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
--- run the tool for each list individually or specify multiple file names separated by commas.<br/>
--- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.txt"
+-- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
+-- use /folder parameter to run the tool for all list file names matching *_GBST_*.txt.<br/>
+-- the /folder parameter takes precedence over the /file parameter.
+-- if a file or folder name contains blanks, enclose in double-quotes, e.g. /file:"Problem Severity Level_GBST_pl-PL.txt"
 
 ## How to localize a used-defined pop-up list:
 
@@ -111,7 +117,7 @@ Notes:<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
+-- if a list name contains blanks or any of "/%5C%3F%3A*%22%3C%3E%7C.%2C%27", enclose in double-quotes, e.g. /list:"Notification Types"<br/>
 -- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".
 
 2. edit the file:<br/>
@@ -135,13 +141,19 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file```<br/>
 -- import multiple lists:
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:full_path_to_input_file-1,full_path_to_input_file-2,...```<br/>
+-- import all lists from current folder:
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:.```<br/>
+-- import all lists from specific folder:
+```CScript //E:JScript ImportLocalizedHGBSTListElement.js /folder:full_path_to_input_files```<br/>
 Notes:<br/>
--- run the tool for each list individually or specify multiple file names separated by commas.<br/>
+-- use /file parameter to run the tool for each list individually or specify multiple file names separated by commas.<br/>
+-- use /folder parameter to run the tool for all list file names matching *_HGBST_*.txt.<br/>
+-- the /folder parameter takes precedence over the /file parameter.
 -- if a file name contains blanks, enclose in double-quotes, e.g. /file:"Notification Types_HGBST_pl-PL.txt".
 
 ## Usage Tips:
 
-* All exported and localized lists can be imported in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.txt" file for Clarify lists and into "cl125_HGBST_pl-PL.txt" file for used-defined pop-up lists. Then use these commands:<br/>
+* An alternate way to import all exported and localized lists in one run (per list type) without a need to specify all file names. To do this, merge all localized lists, e.g. into "cl125_GBST_pl-PL.txt" file for Clarify lists and into "cl125_HGBST_pl-PL.txt" file for used-defined pop-up lists. Then use these commands:<br/>
 -- for Clarify lists:<br/>
 ```CScript //E:JScript ImportLocalizedGBSTListElement.js /file:"cl125_GBST_pl-PL.txt" ```<br/>
 -- for used-defined pop-up lists:<br/>
