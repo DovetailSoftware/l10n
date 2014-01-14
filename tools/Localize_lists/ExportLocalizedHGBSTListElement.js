@@ -15,6 +15,15 @@ var hpath = {
 };
 var bulkNum = 0;
 
+function determineSeparator(aString) {
+   var separatorIndex;
+   var separators = [",","|",";",":","!","#","^",".","?","*","-","_"];
+   for(separatorIndex in separators) {
+      if(aString.indexOf(separators[separatorIndex]) < 0) return separators[separatorIndex];
+   }
+   return "\t";
+};
+
 function outputAllShowsAndElmsForAList(showObjid,elmObj) {
    var localized = "";
    var outbuff = hpath.list_name;
@@ -38,7 +47,9 @@ function outputAllShowsAndElmsForAList(showObjid,elmObj) {
 
    while(!boHgbstElm.EOF) {
       try { localized = boLocElm("title") + ""; } catch(e) { localized = ""; }
-      outFile.WriteLine(outbuff + "," + boHgbstElm("title") + "," + locale + "," + localized);
+      var line = outbuff + boHgbstElm("title") + localized;
+      var separator = determineSeparator(line);
+      outFile.WriteLine(outbuff + separator + boHgbstElm("title") + separator + locale + separator + localized);
       hpath.elems.push({title:boHgbstElm("title")+""});
       outputAllShowsAndElmsForAnElm(boHgbstElm.Id,showObjid);
       hpath.elems.pop();

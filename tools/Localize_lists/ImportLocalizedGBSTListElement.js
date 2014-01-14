@@ -13,6 +13,13 @@ function show_usage_and_exit(err_msg) {
    WScript.Quit(-1);
 }
 
+function findSeparator(a_string) {
+   var retext = /(.)[a-z]{2}-[A-Z]{2}\1/;
+   var separator;
+   var wk = a_string.replace(retext,function($0,$1){separator = $1; return $0});
+   return separator;
+}
+
 var stdout = WScript.StdOut;
 
 var constIForReading = 1;
@@ -25,6 +32,7 @@ var constIIndexOfTitle = 1;
 var constIIndexOfLocale = 2;
 var constIIndexOfLocalizedValue = 3;
 var files = [];
+var errorFound = false;
 
 var folder_name = WScript.Arguments.Named.Item("folder");
 if(!folder_name) folder_name = new String();
@@ -67,17 +75,22 @@ for(l in files) {
    try {
       var inpf = ifso.OpenTextFile(file_name, constIForReading, constBCreate, constIUnicode);
       if(!inpf) {
-         show_usage_and_exit("Input file: '" + file_name + "' cannot be open or doesn't exist");
+         echo("Input file: '" + file_name + "' cannot be open or doesn't exist. Skipping...");
+         errorFound = true;
+         continue;
       }
       var list_name = "";
 
       while(! inpf.AtEndOfStream) {
          var ibuf = inpf.ReadLine();
-         var a = ibuf.split(",");
-         if(a.length < constIExpectedIndexOfLastDataElem) {
-            a = ibuf.split("	");
-            if(a.length < constIExpectedIndexOfLastDataElem) continue;
+         var separator = findSeparator(ibuf);
+         if(!separator) {
+            echo("ERROR: data separator cannot be determined for line: '" + ibuf + "'. Skipping...");
+            errorFound = true;
+            continue;
          }
+         var a = ibuf.split(separator);
+         if(a.length < constIExpectedIndexOfLastDataElem) continue;
          if(list_name != a[constIIndexOfListName]) {
             list_name = a[constIIndexOfListName];
             echo("Importing '" + list_name + "' list from file '" + file_name + "'");
@@ -117,6 +130,7 @@ for(l in files) {
                   boLocElm = null;
                } else {
                   echo("\nERROR: missing list element with title: " + a[constIIndexOfTitle] + " for list: " + list_name);
+                  errorFound = true;
                }
                boElm.CloseGeneric();
                boElm = null;
@@ -129,10 +143,12 @@ for(l in files) {
       inpf.Close();
    } catch(e) {
       echo("ERROR: " + e.description + " while processing " + file_name + " file. Skipping...");
+      errorFound = true;
    }
 }
 
 echo("\nFinished importing GBST lists' localized strings.");
+if(errorFound) echo("SOME ERRORS HAVE BEEN FOUND, SEE MESSAGES ABOVE");
 
 inpf = null;
 ifso = null;

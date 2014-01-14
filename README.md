@@ -7,7 +7,7 @@ Dovetail Software Localization Tool For Clarify-defined and User-defined Lists.
 ## Purpose:
 
 This tool allows to export a list or a set of lists from Clarify/Amdocs database into individual files.
-The files contain comma-separated text, one line per list element per local value.
+The files contain comma (with some exceptions) -separated text, one line per list element per local value.
 These files can be modified in a text editor.
 Then the files can be imported into the database to create/modify localized elements.
 
@@ -22,7 +22,6 @@ Then the files can be imported into the database to create/modify localized elem
 
 - there are no duplicate title values in a Clarify list
 - there are no duplicate title values at any level of a used-defined pop-up list
-- title values do not contain commas or tabs.
 
 ## Methodology:
 
@@ -77,8 +76,11 @@ Important: <br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks or any of "/\?:*"<>|.,'", enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
--- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".
+-- if a list name contains blanks or any of ```/\?:*"<>|.,'```, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
+-- if a list name contains any of ```/\?:*"<>|.,'``` they will be replaced by "-" in the name of the output file<br/>
+-- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".<br/>
+-- **IMPORTANT!** If a list name contains at least one comma character, it can only be exported via 'export all lists' scenario.<br/>
+-- **IMPORTANT!** If a list name or a list element contains a comma character, a different separator (any of ```|;:!#^.?*-_``` ) may be used, and will be determined by the tool.
 
 2. edit the file:<br/>
 -- file name example:<br/>
@@ -117,8 +119,11 @@ Notes:<br/>
 Notes:<br/>
 -- /locale parameter is mandatory<br/>
 -- if /path parameter is not used, output files will be created in current directory<br/>
--- if a list name contains blanks or any of "/\?:*"<>|.,'", enclose in double-quotes, e.g. /list:"Notification Types"<br/>
--- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".
+-- if a list name contains blanks or any of ```/\?:*"<>|.,'```, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
+-- if a list name contains any of ```/\?:*"<>|.,'``` they will be replaced by "-" in the name of the output file<br/>
+-- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".<br/>
+-- **IMPORTANT!** If a list name contains at least one comma character, it can only be exported via 'export all lists' scenario.<br/>
+-- **IMPORTANT!** If a list name or a list element contains a comma character, a different separator (any of ```|;:!#^.?*-_``` ) may be used, and will be determined by the tool.
 
 2. edit the file:<br/>
 -- file name example:<br/>

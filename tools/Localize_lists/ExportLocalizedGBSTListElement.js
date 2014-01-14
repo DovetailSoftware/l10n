@@ -9,6 +9,15 @@ function show_usage_and_exit(err_msg){
    WScript.Quit(-1);
 }
 
+function determineSeparator(aString) {
+   var separatorIndex;
+   var separators = [",","|",";",":","!","#","^",".","?","*","-","_"];
+   for(separatorIndex in separators) {
+      if(aString.indexOf(separators[separatorIndex]) < 0) return separators[separatorIndex];
+   }
+   return "\t";
+};
+
 var stdout = WScript.StdOut;
 var constBOverwrite = true;
 var constBUnicode = true;
@@ -77,7 +86,9 @@ for(l in lists) {
       echo("Exporting '" + list_name + "' list to '" + file_name + "'");
       while(!boElm.EOF) {
          try { localized = boLocElm("title") + ""; } catch(e) { localized = ""; }
-         outFile.writeLine(list_name + "," + boElm("title") + "," + locale + "," + localized);
+         var line = list_name + boElm("title") + localized;
+         var separator = determineSeparator(line);
+         outFile.writeLine(list_name + separator + boElm("title") + separator + locale + separator + localized);
          boElm.MoveNext();
       }
       outFile.Close();
