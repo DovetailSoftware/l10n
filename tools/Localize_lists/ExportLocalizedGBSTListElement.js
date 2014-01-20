@@ -4,8 +4,9 @@ function echo(s){
 
 function show_usage_and_exit(err_msg){
 	echo(err_msg + ", exiting.\n");
-	echo("USAGE 1: CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
-	echo("USAGE 2: CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo("USAGE 1:\nCScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
+	echo("USAGE 2:\nCScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo('USAGE 3:\nCScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] ["list_name_1" "list_name_2" ...]');
    WScript.Quit(-1);
 }
 
@@ -18,48 +19,11 @@ function determineSeparator(aString) {
    return "\t";
 };
 
-var stdout = WScript.StdOut;
-var constBOverwrite = true;
-var constBUnicode = true;
-var constSDefaultExt = ".txt";
-
-var locale = WScript.Arguments.Named.Item("locale");
-if(!locale) locale = new String();
-if(locale == "" || !((/[a-z]{2}-[A-Z]{2}/).test(locale))) {
-   show_usage_and_exit("locale parameter in 'xx-XX' format was not provided and is required");
-}
-
-var file_path = WScript.Arguments.Named.Item("path");
-if(!file_path) file_path = new String();
-file_path = file_path.replace(/[\/\\]+$/,"");
-if(file_path.length != 0) file_path += "\\";
-var outFile = null;
-
-var list_name = WScript.Arguments.Named.Item("list");
-if(!list_name) list_name = new String();
-
-var list_name = WScript.Arguments.Named.Item("list");
-if(!list_name) list_name = new String();
-
-stdout.Write("Connecting to the database...");
-
-var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
-FCApp.Initialize();
-var FCSession = FCApp.CreateSession();	
-FCSession.LoginFromFCApp();
-FCSession.SetNullStringsToEmpty = true;
-var fso = new ActiveXObject("Scripting.FileSystemObject");
-
-echo("\rExporting " + ((list_name == "") ? "all GBST lists'" : (list_name + " GBST list's")) + " strings for locale: " + locale);
-
-var lists = list_name.split(",");
-if(lists == "" || lists.length == 0) lists[0] = "*";
-
-for(l in lists) {
+function exportList(listTitle) {
    var boList = FCSession.CreateGeneric("gbst_lst");
    boList.DataFields = "title";
-   if(lists[l] != "*") {
-      boList.AppendFilter("title","=",lists[l]);
+   if(listTitle != "*") {
+      boList.AppendFilter("title","=",listTitle.replace(/[']/g,"''"));
    }
    boList.AppendSort("title","asc");
 
@@ -102,7 +66,54 @@ for(l in lists) {
    boList = null;
 }
 
+var stdout = WScript.StdOut;
+var constBOverwrite = true;
+var constBUnicode = true;
+var constSDefaultExt = ".txt";
+var lists = [];
+
+var locale = WScript.Arguments.Named.Item("locale");
+if(!locale) locale = new String();
+if(locale == "" || !((/[a-z]{2}-[A-Z]{2}/).test(locale))) {
+   show_usage_and_exit("locale parameter in 'xx-XX' format was not provided and is required");
+}
+
+var file_path = WScript.Arguments.Named.Item("path");
+if(!file_path) file_path = new String();
+file_path = file_path.replace(/[\/\\]+$/,"");
+if(file_path.length != 0) file_path += "\\";
+var outFile = null;
+
+stdout.Write("Connecting to the database...");
+
+var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
+FCApp.Initialize();
+var FCSession = FCApp.CreateSession();
+FCSession.LoginFromFCApp();
+FCSession.SetNullStringsToEmpty = true;
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+echo("\rExporting GBST lists' strings for locale: " + locale);
+
+var list_count = WScript.Arguments.Unnamed.length;
+var list_name = WScript.Arguments.Named.Item("list");
+if(!list_name) {
+   lists = [];
+} else {
+   lists = list_name.split(",");
+}
+if(lists.length == 0 && list_count == 0) {
+   lists[0] = "*";
+} else {
+   for (var i=0; i <= list_count-1; i++) {
+      lists.push(WScript.Arguments.Unnamed.Item(i));
+   }
+}
+
+for(l in lists) exportList(lists[l]);
+
 FCSession.Logout();
 
 //CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:pl-PL /list:"Case Type"
 //CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:pl-PL /list:"Problem Severity Level,Case Type,Open,Closed,Response Priority Code"
+//CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:pl-PL "Problem Severity Level" "Case Type" "Open" "Closed" "Response Priority Code"

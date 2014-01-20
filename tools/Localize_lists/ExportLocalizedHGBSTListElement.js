@@ -4,8 +4,9 @@ function echo(s){
 
 function show_usage_and_exit(err_msg){
 	echo(err_msg + ", exiting.\n");
-	echo("USAGE 1: CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
-	echo("USAGE 2: CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo("USAGE 1:\nCScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name]");
+	echo("USAGE 2:\nCScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] [/list:list_name_1,list_name_2,...]");
+	echo('USAGE 3:\nCScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] ["list_name_1" "list_name_2" ...]');
    WScript.Quit(-1);
 }
 
@@ -82,46 +83,12 @@ function outputAllShowsAndElmsForAnElm(elmObjid,showObjid) {
    boHgbstParElm = null;
 }
 
-var stdout = WScript.StdOut;
-var constBOverwrite = true;
-var constBUnicode = true;
-var constSDefaultExt = ".txt";
-
-var locale = WScript.Arguments.Named.Item("locale");
-if(!locale) locale = new String();
-if(locale == "" || !((/[a-z]{2}-[A-Z]{2}/).test(locale))) {
-   show_usage_and_exit("locale parameter in 'xx-XX' format was not provided and is required");
-}
-
-var file_path = WScript.Arguments.Named.Item("path");
-if(!file_path) file_path = new String();
-file_path = file_path.replace(/[\/\\]+$/,"");
-if(file_path.length != 0) file_path += "\\";
-var outFile = null;
-
-var list_name = WScript.Arguments.Named.Item("list");
-if(!list_name) list_name = new String();
-
-stdout.Write("Connecting to the database...");
-
-var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
-FCApp.Initialize();
-var FCSession = FCApp.CreateSession();	
-FCSession.LoginFromFCApp();
-FCSession.SetNullStringsToEmpty = true;
-var fso = new ActiveXObject("Scripting.FileSystemObject");
-
-echo("\rExporting " + ((list_name == "") ? "all HGBST lists'" : ("'"+list_name + "' HGBST list's")) + " strings for locale: " + locale);
-
-var lists = list_name.split(",");
-if(lists == "" || lists.length == 0) lists[0] = "*";
-
-for(l in lists) {
+function exportList(listTitle) {
    var boHgbstLst = FCSession.CreateGeneric("hgbst_lst");
    boHgbstLst.BulkName = "hgbstlst_" + bulkNum++;
    boHgbstLst.DataFields = "title";
-   if(lists[l] != "*") {
-      boHgbstLst.AppendFilter("title","=",lists[l].replace(/^[']/,"").replace(/[']$/,""));
+   if(listTitle != "*") {
+      boHgbstLst.AppendFilter("title","=",listTitle.replace(/[']/g,"''"));
    }
    boHgbstLst.AppendSort("title","asc");
 
@@ -131,10 +98,10 @@ for(l in lists) {
    boHgbstLst.Bulk.Query();
 
    if(boHgbstLst.EOF || boHgbstShow.EOF) {
-      echo("List: '" + lists[l].replace(/^[']/,"").replace(/[']$/,"") + "' does not exist in this database.");
+      echo("List: '" + listTitle + "' does not exist in this database.");
    } else {
       while(!boHgbstLst.EOF) {
-         list_name = boHgbstLst("title") + "";
+         var list_name = boHgbstLst("title") + "";
          var file_name = file_path + list_name.replace(/[\/\\\?\:\*"\<\>\|\.,']/g,"-") + "_HGBST_" + locale + constSDefaultExt;
          outFile = fso.CreateTextFile(file_name, constBOverwrite, constBUnicode);
          if (outFile == null) {
@@ -155,8 +122,55 @@ for(l in lists) {
    boHgbstLst = null;
 }
 
+var stdout = WScript.StdOut;
+var constBOverwrite = true;
+var constBUnicode = true;
+var constSDefaultExt = ".txt";
+var lists = [];
+
+var locale = WScript.Arguments.Named.Item("locale");
+if(!locale) locale = new String();
+if(locale == "" || !((/[a-z]{2}-[A-Z]{2}/).test(locale))) {
+   show_usage_and_exit("locale parameter in 'xx-XX' format was not provided and is required");
+}
+
+var file_path = WScript.Arguments.Named.Item("path");
+if(!file_path) file_path = new String();
+file_path = file_path.replace(/[\/\\]+$/,"");
+if(file_path.length != 0) file_path += "\\";
+var outFile = null;
+
+stdout.Write("Connecting to the database...");
+
+var FCApp = WScript.CreateObject('FCFLCompat.FCApplication');
+FCApp.Initialize();
+var FCSession = FCApp.CreateSession();
+FCSession.LoginFromFCApp();
+FCSession.SetNullStringsToEmpty = true;
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+echo("\rExporting HGBST lists' strings for locale: " + locale);
+
+var list_count = WScript.Arguments.Unnamed.length;
+var list_name = WScript.Arguments.Named.Item("list");
+if(!list_name) {
+   lists = [];
+} else {
+   lists = list_name.split(",");
+}
+if(lists.length == 0 && list_count == 0) {
+   lists[0] = "*";
+} else {
+   for (var i=0; i <= list_count-1; i++) {
+      lists.push(WScript.Arguments.Unnamed.Item(i));
+   }
+}
+
+for(l in lists) exportList(lists[l]);
+
 FCSession.Logout();
 
 //CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL
 //CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"CR_DESC"
 //CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL /list:"Notification Types,Subcase Types,Contact Expertise,Contact Status,Contact Type,Site Status,Site Type,User Status,Phone Types,Email Types,WORKGROUP"
+//CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:pl-PL "Notification Types" "Subcase Types" "Contact Expertise" "Contact Status" "Contact Type" "Site Status" "Site Type" "User Status" "Phone Types" "Email Types" "WORKGROUP"

@@ -79,7 +79,8 @@ Notes:<br/>
 -- if a list name contains blanks or any of ```/\?:*"<>|.,'```, enclose in double-quotes, e.g. /list:"Problem Severity Level"<br/>
 -- if a list name contains any of ```/\?:*"<>|.,'``` they will be replaced by "-" in the name of the output file<br/>
 -- each list exports into a separate file, e.g. "Problem Severity Level_GBST_pl-PL.txt".<br/>
--- **IMPORTANT!** If a list name contains at least one comma character, it can only be exported via 'export all lists' scenario.<br/>
+-- **IMPORTANT!** If a list name(s) contain(s) at least one comma character, use this alternate format (enclose list names in double-quotes, separate them with blanks):<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] "list_name-1" "list_name-2"... ```<br/>
 -- **IMPORTANT!** If a list name or a list element contains a comma character, a different separator (any of ```|;:!#^.?*-_``` ) may be used, and will be determined by the tool.
 
 2. edit the file:<br/>
@@ -122,7 +123,8 @@ Notes:<br/>
 -- if a list name contains blanks or any of ```/\?:*"<>|.,'```, enclose in double-quotes, e.g. /list:"Notification Types"<br/>
 -- if a list name contains any of ```/\?:*"<>|.,'``` they will be replaced by "-" in the name of the output file<br/>
 -- each list exports into a separate file, e.g. "Notification Types_HGBST_pl-PL.txt".<br/>
--- **IMPORTANT!** If a list name contains at least one comma character, it can only be exported via 'export all lists' scenario.<br/>
+-- **IMPORTANT!** If a list name(s) contain(s) at least one comma character, use this alternate format (enclose list names in double-quotes, separate them with blanks):<br/>
+```CScript //E:JScript ExportLocalizedHGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] "list_name-1" "list_name-2"... ```<br/>
 -- **IMPORTANT!** If a list name or a list element contains a comma character, a different separator (any of ```|;:!#^.?*-_``` ) may be used, and will be determined by the tool.
 
 2. edit the file:<br/>
@@ -165,3 +167,6 @@ Notes:<br/>
 ```CScript //E:JScript ImportLocalizedHGBSTListElement.js /file:"cl125_HGBST_pl-PL.txt" ```<br/>
 Note:<br/>
 -- do not merge Clarify lists and used-defined pop-up lists into one file.
+* List names can be supplied to ExportLocalizedGBSTListElement.js and ExportLocalizedHGBSTListElement.js modules in both formats at the same time, e.g.<br/>
+```CScript //E:JScript ExportLocalizedGBSTListElement.js /locale:xx-XX [/path:full_path_to_output_files] /list:"list_name-1" "list_name-2" ```<br/>
+In this scenario, list_name-1 cannot contain comma character while list_name-2 can.
